@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Kiemel, Elahi & Jeka (2008) の2リンク姿勢制御モデルを周波数領域で体験する教育用シミュレーション">
+  <title>ひとつの指令、ふたつの動き — Kiemel 2008</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="eyebrow">INTERACTIVE PLANT LAB · KIEMEL 2008</div>
+    <h1>ひとつの指令、<br><em>ふたつの動き。</em></h1>
+    <p>筋活動の協調パターンを変えなくても、身体という「プラント」は入力周波数によって脚と体幹を別のタイミングで動かします。</p>
+    <a class="paper-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2604857/" target="_blank" rel="noreferrer">原著論文を開く ↗</a>
+  </header>
+
+  <main>
+    <section class="lab" aria-labelledby="lab-title">
+      <div class="section-heading">
+        <div><span class="kicker">01 · 観察</span><h2 id="lab-title">周波数だけを変える</h2></div>
+        <div class="legend"><span class="dot leg"></span>脚 θ₁ <span class="dot trunk"></span>体幹 θ₂ <span class="dot input"></span>共通入力 u</div>
+      </div>
+
+      <div class="mode-tabs" role="tablist" aria-label="表示モード">
+        <button class="tab active" id="single-tab" data-mode="single" role="tab" aria-selected="true">単独モード</button>
+        <button class="tab" id="compare-tab" data-mode="compare" role="tab" aria-selected="false">比較モード</button>
+      </div>
+
+      <div class="control-panel">
+        <div class="control primary-control">
+          <label for="freq-a">入力周波数 <strong id="freq-a-value">0.200 Hz</strong></label>
+          <input id="freq-a" type="range" min="0" max="1000" value="316" aria-label="左側の入力周波数">
+          <div class="range-labels"><span>0.024 Hz</span><span>2.936 Hz</span></div>
+          <div class="presets" data-target="a">
+            <button data-freq="0.1">0.1</button><button data-freq="0.2">0.2</button><button data-freq="0.8">0.8</button><button data-freq="1.2">1.2</button><button data-freq="1.5">1.5</button>
+          </div>
+        </div>
+        <div class="control compare-only" id="compare-control">
+          <label for="freq-b">右の周波数 <strong id="freq-b-value">1.500 Hz</strong></label>
+          <input id="freq-b" type="range" min="0" max="1000" value="861" aria-label="右側の入力周波数">
+          <div class="range-labels"><span>0.024 Hz</span><span>2.936 Hz</span></div>
+          <div class="presets" data-target="b">
+            <button data-freq="0.1">0.1</button><button data-freq="0.2">0.2</button><button data-freq="0.8">0.8</button><button data-freq="1.2">1.2</button><button data-freq="1.5">1.5</button>
+          </div>
+        </div>
+        <div class="control compact-control">
+          <label for="magnification">表示倍率 <strong id="mag-value">30×</strong></label>
+          <input id="magnification" type="range" min="1" max="100" value="30">
+          <p>見た目だけを拡大。物理計算は不変です。</p>
+        </div>
+      </div>
+
+      <div class="stage-wrap">
+        <div id="stage-a" class="person-stage"><canvas></canvas><div class="stage-label"><b id="stage-a-freq">0.200 Hz</b><span id="stage-a-relation">ほぼ同相</span></div></div>
+        <div id="stage-b" class="person-stage compare-only"><canvas></canvas><div class="stage-label"><b id="stage-b-freq">1.500 Hz</b><span id="stage-b-relation">大きな位相差</span></div></div>
+        <div class="signal-badge"><span class="pulse"></span>同じ共通入力 u(t)<small>振幅・身体・協調パターンは固定</small></div>
+      </div>
+
+      <div class="readouts">
+        <div><span>脚 − 体幹の位相差</span><strong id="phase-diff">—</strong></div>
+        <div><span>脚ゲイン |θ₁/u|</span><strong id="leg-gain">—</strong></div>
+        <div><span>体幹ゲイン |θ₂/u|</span><strong id="trunk-gain">—</strong></div>
+        <div><span>股関節ゲイン |φ₂/u|</span><strong id="hip-angle">—</strong></div>
+      </div>
+    </section>
+
+    <section class="graphs" aria-labelledby="graphs-title">
+      <div class="section-heading"><div><span class="kicker">02 · 対応づける</span><h2 id="graphs-title">動きの下で、何が起きているか</h2></div></div>
+      <article class="chart-card wide"><div class="chart-head"><div><h3>時間応答</h3><p>u(t)/A は上段（正規化）、角度は下段（deg）。一定振幅 A = 0.02 の定常正弦応答です。</p></div><span class="tag">選択中の周波数</span></div><canvas id="time-chart" height="380"></canvas></article>
+      <div class="chart-grid">
+        <article class="chart-card"><div class="chart-head"><div><h3>プラント周波数応答</h3><p>Figure 6A・6B に対応</p></div></div><canvas id="plant-chart" height="430"></canvas></article>
+        <article class="chart-card"><div class="chart-head"><div><h3>能動関節トルク</h3><p>Figure 6C・6D を参照。式(5a) の T₀ⱼ/u</p></div></div><canvas id="torque-chart" height="430"></canvas></article>
+      </div>
+      <p class="chart-note">縦の白線が現在の周波数です。比較モードでは破線が右側を示します。位相は連続表示のためアンラップしています。</p>
+    </section>
+
+    <section class="story" aria-labelledby="story-title">
+      <div class="section-heading"><div><span class="kicker">03 · 理解する</span><h2 id="story-title">信号はひとつ。結果はひとつではない。</h2></div></div>
+      <ol class="flow">
+        <li><span>01</span><div><b>共通の筋活動信号</b><p>神経系からの入力 u(t) は1本。視覚刺激角度そのものではなく、全筋EMGから構成した共通制御信号です。</p></div></li>
+        <li><span>02</span><div><b>関節ごとの変換</b><p>同じ u(t) が、足関節と股関節で異なる固有周波数・減衰比・DCゲインをもつ過程を通り、別々の能動トルクになります。</p></div></li>
+        <li><span>03</span><div><b>2リンクの身体力学</b><p>質量、慣性、重力、固有剛性と減衰が、2つのトルクを脚角度 θ₁ と体幹角度 θ₂ に変換します。</p></div></li>
+        <li><span>04</span><div><b>周波数で位相関係が変わる</b><p>低周波では両リンクがほぼ同相。高周波では慣性と関節特性によって大きな位相差が生じます。</p></div></li>
+        <li><span>05</span><div><b>運動 ≠ 制御戦略</b><p>見かけが「足関節パターン」から「股関節パターン」へ変わっても、それだけで神経制御戦略が切り替わったとは判断できません。</p></div></li>
+      </ol>
+      <div class="answer"><span>最終的な答え</span><p>共通入力が変わらなくても、<strong>関節ごとの筋—トルク動特性</strong>と<strong>周波数依存の身体力学</strong>が、脚と体幹のゲイン・位相を別々に変えるからです。</p></div>
+    </section>
+
+    <section class="methods" aria-labelledby="methods-title">
+      <div class="section-heading"><div><span class="kicker">04 · モデルを確かめる</span><h2 id="methods-title">論文との対応</h2></div></div>
+      <details open><summary>式(4)：2リンク倒立振子</summary><p>鉛直まわりで線形化した論文の2自由度運動方程式を、質量行列 M、重力行列 G、関節—セグメント変換 B でそのまま複素周波数領域に移しています。</p></details>
+      <details><summary>式(5a)(5b)：筋活動からトルクへ</summary><p>足・股それぞれに別の2次ローパス EMG-to-torque 過程を適用し、能動トルクに固有剛性・減衰のトルクを加えます。u(t) は共通でも、両関節トルクは同じになりません。</p></details>
+      <details><summary>定常応答として見る理由</summary><p>推定された固有剛性だけでは身体プラントは受動的に安定しません。本アプリは初期値問題を時間積分せず、各周波数の複素応答から定常正弦波を構成します。したがって「入力開始後に安定してこの動きへ収束する」ことを示すアニメーションではありません。</p></details>
+      <details><summary>パラメータと限界</summary><div id="parameter-table"></div><p>Table 1 の平均人体寸法と Table 2 の高振幅条件を使用。小角度線形化・2リンク・集中筋腱アクチュエータという簡略化は論文モデル自体の仮定です。本アプリ独自の力学的簡略化はしていません。入力振幅は可視化用に一定の正規化値としています。</p></details>
+    </section>
+  </main>
+  <footer><p>Kiemel, Elahi & Jeka (2008) に基づく教育用可視化。数値の再利用・解釈時は原著論文を参照してください。</p></footer>
+  <script src="model.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
